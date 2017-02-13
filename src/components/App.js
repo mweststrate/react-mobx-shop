@@ -31,7 +31,7 @@ class App extends Component {
   renderPage() {
     switch(this.state.page) {
       case "books":
-        return <Books openBookPage={this.openBookPage} />
+        return <Books bookStore={this.props.bookStore} openBookPage={this.openBookPage} />
       case "book":
         return <BookDetails book={this.state.selectedBook} />
       case "cart":
