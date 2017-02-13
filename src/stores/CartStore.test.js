@@ -23,3 +23,21 @@ it('cart store can add new entries', () => {
   expect(cart.subTotal).toBe(300)
   expect(cart.total).toBe(270)
 })
+
+it('cart store can clear entries', () => {
+  const bookStore = new BookStore(bookFetcher)
+  bookStore.updateBooks([{
+    id: 1,
+    price: 3
+  }])
+
+  const cart = new CartStore(bookStore)
+  cart.addBook(bookStore.books.get(1))
+
+  expect(cart.total).toBe(3)
+  expect(cart.canCheckout).toBe(true)
+
+  cart.clear()
+  expect(cart.total).toBe(0)
+  expect(cart.canCheckout).toBe(false)
+})

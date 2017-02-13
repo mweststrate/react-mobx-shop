@@ -13,7 +13,16 @@ const Cart = observer(({cartStore}) => (
     <p>Subtotal: {cartStore.subTotal} €</p>
     {cartStore.hasDiscount && <p><i>Large order discount: {cartStore.discount} €</i></p>}
     <p><b>Total: {cartStore.total} €</b></p>
-    <button disabled="disabled">Submit order</button>
+    <button
+      disabled={!cartStore.canCheckout}
+      onClick={() => {
+        const total = cartStore.total
+        cartStore.clear()
+        alert(`Bought books for ${total} € !`)
+      }}
+    >
+      Submit order
+    </button>
   </section>
 ))
 

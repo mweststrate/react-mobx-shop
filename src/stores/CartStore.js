@@ -37,6 +37,10 @@ export default class CartStore {
         return this.subTotal - this.discount
     }
 
+    @computed get canCheckout() {
+        return this.entries.length > 0 && this.entries.every(entry => entry.quantity > 0)
+    }
+
     @action addBook(book) {
         let entry = this.entries.find(entry => entry.book === book)
         if (!entry) {
@@ -44,5 +48,9 @@ export default class CartStore {
             this.entries.push(entry)
         }
         entry.quantity += 1
+    }
+
+    @action clear() {
+        this.entries.clear()
     }
 }
