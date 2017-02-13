@@ -1,8 +1,8 @@
 import React from 'react'
-import { observer } from 'mobx-react'
+import { observer, inject } from 'mobx-react'
 import './Cart.css'
 
-const Cart = observer(({cartStore}) => (
+const Cart = inject("cartStore")(observer(({cartStore}) => (
   <section className="Page-cart">
     <h2>Your cart</h2>
     <section className="Page-cart-items">
@@ -24,7 +24,7 @@ const Cart = observer(({cartStore}) => (
       Submit order
     </button>
   </section>
-))
+)))
 
 const CartEntry = observer(({entry}) => (
   <div className="Page-cart-item">

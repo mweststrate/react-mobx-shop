@@ -1,5 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import {Provider} from 'mobx-react'
+
 import App from './components/App'
 import './index.css'
 
@@ -11,7 +13,9 @@ const bookStore = new BookStore(fetcher)
 const cartStore = new CartStore(bookStore)
 
 ReactDOM.render(
-  <App bookStore={bookStore} cartStore={cartStore} />,
+  <Provider bookStore={bookStore} cartStore={cartStore}>
+    <App />
+  </Provider>,
   document.getElementById('root')
 )
 

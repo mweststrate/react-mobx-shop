@@ -1,7 +1,7 @@
 import React from 'react'
-import {observer} from 'mobx-react'
+import { observer, inject } from 'mobx-react'
 
-const Books = observer(({bookStore, openBookPage}) => (
+const Books = inject("bookStore")(observer(({bookStore, openBookPage}) => (
   <section className="Page-books">
     <h1>Available books</h1>
     {bookStore.isLoading && "Loading..."}
@@ -17,7 +17,7 @@ const Books = observer(({bookStore, openBookPage}) => (
       </ol>
     }
   </section>
-))
+)))
 
 const BookEntry = observer(({onClickEntry, book}) => (
   <li>

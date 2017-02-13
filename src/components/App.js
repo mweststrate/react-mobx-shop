@@ -31,11 +31,11 @@ class App extends Component {
   renderPage() {
     switch(this.state.page) {
       case "books":
-        return <Books bookStore={this.props.bookStore} openBookPage={this.openBookPage} />
+        return <Books openBookPage={this.openBookPage} />
       case "book":
-        return <BookDetails book={this.state.selectedBook} cartStore={this.props.cartStore} />
+        return <BookDetails book={this.state.selectedBook} />
       case "cart":
-        return <Cart cartStore={this.props.cartStore} />
+        return <Cart />
       default:
         return "Sry, not found"
     }
