@@ -33,9 +33,9 @@ class App extends Component {
       case "books":
         return <Books bookStore={this.props.bookStore} openBookPage={this.openBookPage} />
       case "book":
-        return <BookDetails book={this.state.selectedBook} />
+        return <BookDetails book={this.state.selectedBook} cartStore={this.props.cartStore} />
       case "cart":
-        return <Cart />
+        return <Cart cartStore={this.props.cartStore} />
       default:
         return "Sry, not found"
     }

@@ -17,6 +17,7 @@ class Book {
 export default class BookStore {
     @observable isLoading = false
     books = observable.map()
+    fetch
 
     constructor(fetch) {
         this.fetch = fetch
