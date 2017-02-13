@@ -23,8 +23,7 @@ export default class BookStore {
     }
 
     @computed get sortedBooks() {
-        const books = this.books.values()
-        return books.sort((a, b) =>
+        return this.books.values().sort((a, b) =>
             a.name > b.name
                 ? 1
                 : a.name === b.name
