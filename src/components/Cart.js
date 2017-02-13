@@ -26,9 +26,13 @@ const Cart = inject("cartStore")(observer(({cartStore}) => (
   </section>
 )))
 
-const CartEntry = observer(({entry}) => (
+const CartEntry = inject("viewStore")(observer(({viewStore, entry}) => (
   <div className="Page-cart-item">
-    <p><a href="#">{entry.book.name}</a></p>
+    <p>
+      <a href={`/book/${entry.book.id}`} onClick={onEntryClick.bind(entry, viewStore)}>
+        {entry.book.name}
+      </a>
+    </p>
     {!entry.book.isAvailable && <p><b>Not available anymore</b></p>}
     <div className="Page-cart-item-details">
       <p>Amount:
@@ -37,7 +41,13 @@ const CartEntry = observer(({entry}) => (
       </p>
     </div>
   </div>
-))
+)))
+
+function onEntryClick(viewStore, e) {
+  viewStore.openBookPage(this.book);
+  e.preventDefault();
+  return false;
+}
 
 function updateEntryQuantity(e) {
   this.quantity = parseInt(e.target.value, 10)

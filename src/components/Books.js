@@ -1,28 +1,31 @@
 import React from 'react'
 import { observer, inject } from 'mobx-react'
 
-const Books = inject("bookStore")(observer(({bookStore, openBookPage}) => (
+const Books = inject("bookStore")(observer(({bookStore}) => (
   <section className="Page-books">
     <h1>Available books</h1>
-    {bookStore.isLoading && "Loading..."}
-    {!bookStore.isLoading &&
-      <ol>
-        {bookStore.sortedAvailableBooks.map(book =>
-          <BookEntry
-            key={book.id}
-            book={book}
-            onClickEntry={openBookPage}
-          />
-        )}
-      </ol>
-    }
+    <ol>
+      {bookStore.sortedAvailableBooks.map(book =>
+        <BookEntry
+          key={book.id}
+          book={book}
+        />
+      )}
+    </ol>
   </section>
 )))
 
-const BookEntry = observer(({onClickEntry, book}) => (
+const BookEntry = inject("viewStore")(observer(({book, viewStore}) => (
   <li>
-    <a onClick={() => onClickEntry(book)}>{book.name}</a>
+    <a
+      href={`/book/${book.id}`}
+      onClick={(e) => {
+        e.preventDefault();
+        viewStore.openBookPage(book);
+        return false;
+      }}
+    >{book.name}</a>
   </li>
-))
+)))
 
 export default Books
