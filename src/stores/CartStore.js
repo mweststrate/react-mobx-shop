@@ -71,14 +71,15 @@ export default class CartStore {
         return this.entries.filter(entry => entry.isValidBook).map(entry => entry.json)
     }
 
-    @action addBook(book, quantity = 1) {
+    @action addBook(book, quantity = 1, notify = true) {
         let entry = this.entries.find(entry => entry.book === book)
         if (!entry) {
             entry = new CartEntry(book)
             this.entries.push(entry)
         }
         entry.quantity += quantity
-        this.shop.alert("Added to cart")
+        if (notify)
+            this.shop.alert("Added to cart")
     }
 
     @action.bound checkout() {
@@ -96,7 +97,7 @@ export default class CartStore {
         data.forEach(json => {
             const book = this.shop.books.get(json.book)
             if (book)
-                this.addBook(book, json.quantity)
+                this.addBook(book, json.quantity, false)
         });
     }
 }
