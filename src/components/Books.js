@@ -7,7 +7,7 @@ const Books = inject("bookStore")(observer(({bookStore, openBookPage}) => (
     {bookStore.isLoading && "Loading..."}
     {!bookStore.isLoading &&
       <ol>
-        {bookStore.sortedBooks.map(book =>
+        {bookStore.sortedAvailableBooks.map(book =>
           <BookEntry
             key={book.id}
             book={book}

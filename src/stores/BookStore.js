@@ -1,17 +1,12 @@
-import {observable, computed, action} from "mobx"
+import { observable, computed, action } from "mobx"
+import { serializable, identifier, update, deserialize } from "serializr"
 
 class Book {
-    @observable id
-    @observable name
-    @observable author
-    @observable price
-
-    constructor({id, name, author, price}) {
-        this.id = id
-        this.name = name
-        this.author = author
-        this.price = price
-    }
+    @serializable(identifier()) id
+    @serializable @observable name
+    @serializable @observable author
+    @serializable @observable price
+    @observable isAvailable = true
 }
 
 export default class BookStore {
@@ -20,22 +15,24 @@ export default class BookStore {
     fetch
 
     constructor(fetch) {
-        this.fetch = fetch
+        this.fetch = fetch;
+        setInterval(this.loadBooks, 5000)
     }
 
-    @computed get sortedBooks() {
-        return this.books.values().sort((a, b) =>
-            a.name > b.name
-                ? 1
-                : a.name === b.name
-                    ? 0
-                    : -1
-        )
+    @computed get sortedAvailableBooks() {
+        return this.books.values()
+            .filter(b => b.isAvailable)
+            .sort((a, b) =>
+                a.name > b.name
+                    ? 1
+                    : a.name === b.name
+                        ? 0
+                        : -1
+            )
     }
 
-    @action loadBooks() {
-        this.isLoading = true
-        this.fetch("books.json")
+    @action.bound loadBooks() {
+        this.fetch("/books.json")
             .then(json => {
                 this.updateBooks(json)
                 this.isLoading = false
@@ -46,9 +43,15 @@ export default class BookStore {
     }
 
     @action updateBooks(json) {
-        this.books.clear()
+        this.books.values().forEach(book => book.isAvailable = false);
         json.forEach(bookJson => {
-            this.books.set(bookJson.id, new Book(bookJson))
-        })
+            if (this.books.has(bookJson.id)) {
+                const book = this.books.get(bookJson.id);
+                book.isAvailable = true;
+                update(book, bookJson);
+            } else {
+                this.books.set(bookJson.id, deserialize(Book, bookJson))
+            }
+        });
     }
 }

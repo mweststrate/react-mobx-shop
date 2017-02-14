@@ -29,6 +29,7 @@ const Cart = inject("cartStore")(observer(({cartStore}) => (
 const CartEntry = observer(({entry}) => (
   <div className="Page-cart-item">
     <p><a href="#">{entry.book.name}</a></p>
+    {!entry.book.isAvailable && <p><b>Not available anymore</b></p>}
     <div className="Page-cart-item-details">
       <p>Amount:
         <input value={entry.quantity} onChange={updateEntryQuantity.bind(entry)} />

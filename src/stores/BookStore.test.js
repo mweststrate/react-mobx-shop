@@ -23,7 +23,7 @@ it('bookstore sorts data', (done) => {
   when(
     () => store.isLoading === false,
     () => {
-      expect(store.sortedBooks.map(book => book.name)).toEqual([
+      expect(store.sortedAvailableBooks.map(book => book.name)).toEqual([
         "Lucene in Action, Second Edition",
         "Sophie\'s World : The Greek Philosophers",
         "The Lightning Thief",

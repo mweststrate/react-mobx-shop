@@ -12,6 +12,10 @@ class CartEntry {
         return this.quantity * this.book.price
     }
 
+    @computed get isValidBook() {
+        return this.book.isAvailable
+    }
+
     @computed get json() {
         return {
             book: this.book.id,
@@ -60,11 +64,11 @@ export default class CartStore {
     }
 
     @computed get canCheckout() {
-        return this.entries.length > 0 && this.entries.every(entry => entry.quantity > 0)
+        return this.entries.length > 0 && this.entries.every(entry => entry.quantity > 0 && entry.isValidBook)
     }
 
     @computed get json() {
-        return this.entries.map(entry => entry.json)
+        return this.entries.filter(entry => entry.isValidBook).map(entry => entry.json)
     }
 
     @action addBook(book, quantity = 1) {
@@ -83,7 +87,9 @@ export default class CartStore {
     @action readFromLocalStorage() {
         const data = JSON.parse(window.localStorage.getItem('cart') || '[]')
         data.forEach(json => {
-            this.addBook(this.bookStore.books.get(json.book), json.quantity)
+            const book = this.bookStore.books.get(json.book)
+            if (book)
+                this.addBook(book, json.quantity)
         });
     }
 }
