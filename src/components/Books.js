@@ -1,5 +1,6 @@
 import React from 'react'
 import { observer, inject } from 'mobx-react'
+import { Link } from 'react-router-dom'
 
 const Books = inject("bookStore")(observer(({bookStore, openBookPage}) => (
   <section className="Page-books">
@@ -21,7 +22,7 @@ const Books = inject("bookStore")(observer(({bookStore, openBookPage}) => (
 
 const BookEntry = observer(({onClickEntry, book}) => (
   <li>
-    <a onClick={() => onClickEntry(book)}>{book.name}</a>
+    <Link to={`/book/${book.id}`}>{book.name}</Link>
   </li>
 ))
 

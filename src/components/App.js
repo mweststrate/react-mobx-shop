@@ -1,4 +1,8 @@
 import React, { Component } from 'react'
+import { inject, observer } from 'mobx-react'
+import { when } from 'mobx'
+import { Link } from 'react-router-dom'
+
 import logo from '../logo.svg'
 import './App.css'
 
@@ -6,6 +10,7 @@ import Books from "./Books"
 import BookDetails from "./BookDetails"
 import Cart from "./Cart"
 
+@inject("bookStore") @observer
 class App extends Component {
   constructor(p, x) {
     super(p, x)
@@ -15,13 +20,21 @@ class App extends Component {
     }
   }
 
+  componentWillMount() {
+    this.handleRoute(this.props.match)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.handleRoute(nextProps.match)
+  }
+
   render() {
     return (
       <div className="App">
         <AppHeader />
         <AppMenu>
-          <AppMenuItem onClick={this.openBooksPage}>Available books</AppMenuItem>
-          <AppMenuItem onClick={this.openCartPage}>Your cart</AppMenuItem>
+          <AppMenuItem link="/">Available books</AppMenuItem>
+          <AppMenuItem link="/cart">Your cart</AppMenuItem>
         </AppMenu>
         {this.renderPage()}
       </div>
@@ -38,6 +51,31 @@ class App extends Component {
         return <Cart />
       default:
         return "Sry, not found"
+    }
+  }
+
+  handleRoute(match) {
+    if (!match)
+      return
+    switch (match.path) {
+      case "/cart":
+        this.openCartPage()
+        break
+      case "/book/:bookId":
+        const bookStore = this.props.bookStore
+        when(
+          () => !bookStore.isLoading,
+          () => {
+            this.openBookPage(bookStore.books.get(match.params.bookId))
+          }
+        )
+        break
+      case "/":
+        this.openBooksPage()
+        break
+      default:
+        console.warn("No route!")
+        break
     }
   }
 
@@ -76,9 +114,9 @@ const AppMenu = ({children}) => (
   </ul>
 )
 
-const AppMenuItem = ({onClick, children}) => (
+const AppMenuItem = ({link, children}) => (
     <li>
-      <a onClick={onClick}>{children}</a>
+      <Link to={link}>{children}</Link>
     </li>
 )
 

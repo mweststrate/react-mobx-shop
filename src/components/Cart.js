@@ -1,6 +1,7 @@
 import React from 'react'
 import { observer, inject } from 'mobx-react'
 import './Cart.css'
+import { Link } from 'react-router-dom'
 
 const Cart = inject("cartStore")(observer(({cartStore}) => (
   <section className="Page-cart">
@@ -28,7 +29,11 @@ const Cart = inject("cartStore")(observer(({cartStore}) => (
 
 const CartEntry = observer(({entry}) => (
   <div className="Page-cart-item">
-    <p><a href="#">{entry.book.name}</a></p>
+    <p>
+      <Link to={`/book/${entry.book.id}`}>
+        {entry.book.name}
+      </Link>
+    </p>
     {!entry.book.isAvailable && <p><b>Not available anymore</b></p>}
     <div className="Page-cart-item-details">
       <p>Amount:
