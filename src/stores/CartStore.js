@@ -25,15 +25,15 @@ class CartEntry {
 }
 
 export default class CartStore {
-    bookStore
+    shop
     @observable entries = []
 
-    constructor(bookStore) {
-        this.bookStore = bookStore
+    constructor(shop) {
+        this.shop = shop
 
         if (typeof window.localStorage !== "undefined") {
             when(
-                () => !bookStore.isLoading,
+                () => !shop.isLoading,
                 () => {
                     this.readFromLocalStorage();
                     reaction(
@@ -87,7 +87,7 @@ export default class CartStore {
     @action readFromLocalStorage() {
         const data = JSON.parse(window.localStorage.getItem('cart') || '[]')
         data.forEach(json => {
-            const book = this.bookStore.books.get(json.book)
+            const book = this.shop.books.get(json.book)
             if (book)
                 this.addBook(book, json.quantity)
         });

@@ -3,14 +3,14 @@ import { observable, computed, action } from "mobx"
 export default class ViewStore {
   @observable page = "books"
   @observable selectedBookId = null
-  bookStore
+  shop
 
-  constructor(bookStore) {
-    this.bookStore = bookStore
+  constructor(shop) {
+    this.shop = shop
   }
 
   @computed get isLoading() {
-    return this.bookStore.isLoading
+    return this.shop.isLoading
   }
 
   @computed get currentUrl() {
@@ -27,7 +27,7 @@ export default class ViewStore {
   }
 
   @computed get selectedBook() {
-    return this.isLoading || !this.selectedBookId ? null : this.bookStore.books.get(this.selectedBookId)
+    return this.isLoading || !this.selectedBookId ? null : this.shop.books.get(this.selectedBookId)
   }
 
   @action.bound openBooksPage() {

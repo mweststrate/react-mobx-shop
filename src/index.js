@@ -7,26 +7,20 @@ import createRouter from './utils/router'
 import App from './components/App'
 import './index.css'
 
-import BookStore from './stores/BookStore'
-import CartStore from './stores/CartStore'
-import ViewStore from './stores/ViewStore'
+import ShopStore from './stores/ShopStore'
 
 const fetcher = url => window.fetch(url).then(response => response.json())
-const bookStore = new BookStore(fetcher)
-const cartStore = new CartStore(bookStore)
-const viewStore = new ViewStore(bookStore)
+const shop = new ShopStore(fetcher)
 
 ReactDOM.render(
-  <Provider bookStore={bookStore} cartStore={cartStore} viewStore={viewStore}>
+  <Provider shop={shop}>
     <App />
   </Provider>,
   document.getElementById('root')
 )
 
-bookStore.loadBooks()
-
 reaction(
-  () => viewStore.currentUrl,
+  () => shop.view.currentUrl,
   (path) => {
     if (window.location.pathname !== path)
       window.history.pushState(null, null, path)
@@ -34,9 +28,9 @@ reaction(
 )
 
 const router = createRouter({
-  "/book/:bookId": ({bookId}) => viewStore.openBookPageById(bookId),
-  "/cart":         viewStore.openCartPage,
-  "/":             viewStore.openBooksPage
+  "/book/:bookId": ({bookId}) => shop.view.openBookPageById(bookId),
+  "/cart":         shop.view.openCartPage,
+  "/":             shop.view.openBooksPage
 })
 
 window.onpopstate = function historyChange(ev) {

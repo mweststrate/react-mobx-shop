@@ -8,16 +8,16 @@ import BookDetails from "./BookDetails"
 import Cart from "./Cart"
 
 
-const App = inject("viewStore")(observer(({ viewStore }) => (
+const App = inject("shop")(observer(({ shop }) => (
   <div className="App">
     <AppHeader />
     <AppMenu>
-      <AppMenuItem onClick={viewStore.openBooksPage}>Available books</AppMenuItem>
-      <AppMenuItem onClick={viewStore.openCartPage}>Your cart</AppMenuItem>
+      <AppMenuItem onClick={shop.view.openBooksPage}>Available books</AppMenuItem>
+      <AppMenuItem onClick={shop.view.openCartPage}>Your cart</AppMenuItem>
     </AppMenu>
-    {viewStore.isLoading
+    {shop.isLoading
       ? <h1>Loading...</h1>
-      : renderPage(viewStore)
+      : renderPage(shop.view)
     }
   </div>
 )))

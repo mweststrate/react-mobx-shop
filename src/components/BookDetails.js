@@ -1,14 +1,14 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
 
-const BookDetails = inject("cartStore")(observer(({book, cartStore}) => (
+const BookDetails = inject("shop")(observer(({book, shop}) => (
   <section className="Page-book">
     <h2>{book.name}</h2>
     <p><i>By: {book.author}</i></p>
     <p>Price: ${book.price}€</p>
     <button
         onClick={() => {
-            cartStore.addBook(book)
+            shop.cart.addBook(book)
             alert("Added to cart")
         }}
     >

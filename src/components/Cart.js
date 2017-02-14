@@ -2,22 +2,22 @@ import React from 'react'
 import { observer, inject } from 'mobx-react'
 import './Cart.css'
 
-const Cart = inject("cartStore")(observer(({cartStore}) => (
+const Cart = inject("shop")(observer(({ shop: { cart }}) => (
   <section className="Page-cart">
     <h2>Your cart</h2>
     <section className="Page-cart-items">
-      {cartStore.entries.map(entry =>
+      {cart.entries.map(entry =>
         <CartEntry key={entry.book.id} entry={entry} />
       )}
     </section>
-    <p>Subtotal: {cartStore.subTotal} €</p>
-    {cartStore.hasDiscount && <p><i>Large order discount: {cartStore.discount} €</i></p>}
-    <p><b>Total: {cartStore.total} €</b></p>
+    <p>Subtotal: {cart.subTotal} €</p>
+    {cart.hasDiscount && <p><i>Large order discount: {cart.discount} €</i></p>}
+    <p><b>Total: {cart.total} €</b></p>
     <button
-      disabled={!cartStore.canCheckout}
+      disabled={!cart.canCheckout}
       onClick={() => {
-        const total = cartStore.total
-        cartStore.clear()
+        const total = cart.total
+        cart.clear()
         alert(`Bought books for ${total} € !`)
       }}
     >
@@ -26,10 +26,10 @@ const Cart = inject("cartStore")(observer(({cartStore}) => (
   </section>
 )))
 
-const CartEntry = inject("viewStore")(observer(({viewStore, entry}) => (
+const CartEntry = inject("shop")(observer(({shop, entry}) => (
   <div className="Page-cart-item">
     <p>
-      <a href={`/book/${entry.book.id}`} onClick={onEntryClick.bind(entry, viewStore)}>
+      <a href={`/book/${entry.book.id}`} onClick={onEntryClick.bind(entry, shop)}>
         {entry.book.name}
       </a>
     </p>
@@ -43,8 +43,8 @@ const CartEntry = inject("viewStore")(observer(({viewStore, entry}) => (
   </div>
 )))
 
-function onEntryClick(viewStore, e) {
-  viewStore.openBookPage(this.book);
+function onEntryClick(shop, e) {
+  shop.view.openBookPage(this.book);
   e.preventDefault();
   return false;
 }

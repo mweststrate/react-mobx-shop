@@ -12,10 +12,10 @@ class Book {
 export default class BookStore {
     @observable isLoading = true
     books = observable.map()
-    fetch
+    shop
 
-    constructor(fetch) {
-        this.fetch = fetch;
+    constructor(shop) {
+        this.shop = shop
         setInterval(this.loadBooks, 5000)
     }
 
@@ -32,7 +32,7 @@ export default class BookStore {
     }
 
     @action.bound loadBooks() {
-        this.fetch("/books.json")
+        this.shop.fetch("/books.json")
             .then(json => {
                 this.updateBooks(json)
                 this.isLoading = false
