@@ -1,4 +1,4 @@
-import { observable, computed, action } from "mobx"
+import { observable, computed, action, reaction, when } from "mobx"
 
 class CartEntry {
     @observable quantity = 0
@@ -11,6 +11,13 @@ class CartEntry {
     @computed get price() {
         return this.quantity * this.book.price
     }
+
+    @computed get json() {
+        return {
+            book: this.book.id,
+            quantity: this.quantity
+        }
+    }
 }
 
 export default class CartStore {
@@ -19,6 +26,21 @@ export default class CartStore {
 
     constructor(bookStore) {
         this.bookStore = bookStore
+
+        if (typeof window.localStorage !== "undefined") {
+            when(
+                () => !bookStore.isLoading,
+                () => {
+                    this.readFromLocalStorage();
+                    reaction(
+                        () => this.json,
+                        json => {
+                            window.localStorage.setItem('cart', JSON.stringify(json));
+                        }
+                    )
+                }
+            )
+        }
     }
 
     @computed get subTotal() {
@@ -41,16 +63,27 @@ export default class CartStore {
         return this.entries.length > 0 && this.entries.every(entry => entry.quantity > 0)
     }
 
-    @action addBook(book) {
+    @computed get json() {
+        return this.entries.map(entry => entry.json)
+    }
+
+    @action addBook(book, quantity = 1) {
         let entry = this.entries.find(entry => entry.book === book)
         if (!entry) {
             entry = new CartEntry(book)
             this.entries.push(entry)
         }
-        entry.quantity += 1
+        entry.quantity += quantity
     }
 
     @action clear() {
         this.entries.clear()
+    }
+
+    @action readFromLocalStorage() {
+        const data = JSON.parse(window.localStorage.getItem('cart') || '[]')
+        data.forEach(json => {
+            this.addBook(this.bookStore.books.get(json.book), json.quantity)
+        });
     }
 }
