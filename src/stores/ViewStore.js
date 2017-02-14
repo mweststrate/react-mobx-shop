@@ -20,7 +20,7 @@ export default class ViewStore {
       case "book":
         return "/book/" + this.selectedBookId
       case "cart":
-        return "/cart/"
+        return "/cart"
       default:
         return "/404"
     }

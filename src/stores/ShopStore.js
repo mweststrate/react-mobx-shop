@@ -8,8 +8,9 @@ export default class ShopStore {
   cartStore
   viewStore
 
-  constructor(fetcher) {
+  constructor(fetcher, alert = windowAlert) {
     this.fetch = fetcher
+    this.alert = alert
     this.bookStore = new BookStore(this)
     this.cart = new CartStore(this)
     this.view = new ViewStore(this)
@@ -27,4 +28,8 @@ export default class ShopStore {
   get sortedAvailableBooks() {
     return this.bookStore.sortedAvailableBooks
   }
+}
+
+function windowAlert(msg) {
+  window.alert(msg)
 }

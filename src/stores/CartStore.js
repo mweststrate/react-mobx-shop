@@ -78,6 +78,13 @@ export default class CartStore {
             this.entries.push(entry)
         }
         entry.quantity += quantity
+        this.shop.alert("Added to cart")
+    }
+
+    @action.bound checkout() {
+        const total = this.total
+        this.clear()
+        this.shop.alert(`Bought books for ${total} € !`)
     }
 
     @action clear() {

@@ -8,8 +8,7 @@ const BookDetails = inject("shop")(observer(({book, shop}) => (
     <p>Price: ${book.price}€</p>
     <button
         onClick={() => {
-            shop.cart.addBook(book)
-            alert("Added to cart")
+            shop.cart.addBook(book);
         }}
     >
         Add to cart
