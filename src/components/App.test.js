@@ -2,16 +2,30 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 import { Provider } from 'mobx-react'
+import renderer from 'react-test-renderer'
+import fs from "fs"
 
 import ShopStore from "../stores/ShopStore"
 
-it('renders without crashing', () => {
-  const shop = new ShopStore(() => Promise.resolve([]));
+const bookFetcher = () => Promise.resolve(JSON.parse(fs.readFileSync("./public/books.json")))
 
-  const div = document.createElement('div')
-  ReactDOM.render(
+it('matches snapshot before and after loading', (done) => {
+  const shop = new ShopStore(bookFetcher)
+
+  const app = renderer.create(
     <Provider shop={shop}>
       <App />
-    </Provider>,
-    div)
+    </Provider>
+  )
+  let tree = app.toJSON()
+  expect(tree).toMatchSnapshot()
+
+  setTimeout(
+    () => {
+      let tree = app.toJSON()
+      expect(tree).toMatchSnapshot()
+      done()
+    },
+    100
+  )
 })
