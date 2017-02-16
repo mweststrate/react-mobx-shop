@@ -1,5 +1,5 @@
-import React from 'react';
-import './Cart.css';
+import React from 'react'
+import './Cart.css'
 
 const Cart = () => (
   <section className="Page-cart">
@@ -25,4 +25,4 @@ const Cart = () => (
   </section>
 )
 
-export default Cart;
+export default Cart

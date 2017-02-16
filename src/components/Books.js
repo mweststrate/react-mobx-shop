@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const Books = ({openBookPage}) => (
   <section className="Page-books">
@@ -34,4 +34,4 @@ const BookEntry = ({onClickEntry, book}) => (
   </li>
 )
 
-export default Books;
+export default Books

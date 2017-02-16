@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const BookDetails = ({book}) => (
   <section className="Page-book">
@@ -9,4 +9,4 @@ const BookDetails = ({book}) => (
   </section>
 )
 
-export default BookDetails;
+export default BookDetails

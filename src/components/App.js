@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import logo from '../logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import logo from '../logo.svg'
+import './App.css'
 
-import Books from "./Books";
-import BookDetails from "./BookDetails";
-import Cart from "./Cart";
+import Books from "./Books"
+import BookDetails from "./BookDetails"
+import Cart from "./Cart"
 
 class App extends Component {
   constructor(p, x) {
-    super(p, x);
+    super(p, x)
     this.state = {
       page: "books",
       selectedBook: null
@@ -25,7 +25,7 @@ class App extends Component {
         </AppMenu>
         {this.renderPage()}
       </div>
-    );
+    )
   }
 
   renderPage() {
@@ -82,4 +82,4 @@ const AppMenuItem = ({onClick, children}) => (
     </li>
 )
 
-export default App;
+export default App
