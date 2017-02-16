@@ -3,17 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "react-scripts": "0.9.0"
+    "custom-react-scripts": "0.0.23"
   },
   "dependencies": {
+    "mobx": "^3.1.0",
+    "mobx-react": "^4.1.0",
+    "mobx-react-devtools": "^4.2.11",
+    "mobx-utils": "^2.0.1",
     "react": "^15.4.2",
-    "react-app-rewire-mobx": "^0.2.0",
-    "react-app-rewired": "^0.6.0",
     "react-dom": "^15.4.2"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }
