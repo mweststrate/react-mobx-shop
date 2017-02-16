@@ -14,12 +14,14 @@
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-test-renderer": "^15.4.2",
-    "serializr": "^1.1.9"
+    "serializr": "^1.1.9",
+    "surge": "^0.18.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "surge": "npm run build && cd build && cp index.html 200.html && cp index.html 404.html && surge --project . --domain book-shop-2017-02-17.surge.sh"
   }
 }
