@@ -1,11 +1,11 @@
 import * as fs from "fs"
 import {when} from "mobx"
-import ShopStore from './ShopStore'
+import {ShopStore} from './ShopStore'
 
 const bookFetcher = () => Promise.resolve(JSON.parse(fs.readFileSync("./public/books.json")))
 
 it('bookstore fetches data', (done) => {
-  const store = new ShopStore(bookFetcher)
+  const store = ShopStore.create({}, { fetch: bookFetcher })
   when(
     () => store.isLoading === false,
     () => {
@@ -17,7 +17,7 @@ it('bookstore fetches data', (done) => {
 })
 
 it('bookstore sorts data', (done) => {
-  const store = new ShopStore(bookFetcher)
+  const store = ShopStore.create({}, { fetch: bookFetcher })
   when(
     () => store.isLoading === false,
     () => {

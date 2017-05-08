@@ -5,12 +5,12 @@ import { Provider } from 'mobx-react'
 import renderer from 'react-test-renderer'
 import fs from "fs"
 
-import ShopStore from "../stores/ShopStore"
+import { ShopStore } from "../stores/ShopStore"
 
 const bookFetcher = () => Promise.resolve(JSON.parse(fs.readFileSync("./public/books.json")))
 
 it('matches snapshot before and after loading', (done) => {
-  const shop = new ShopStore(bookFetcher)
+  const shop = ShopStore.create({}, { fetch: bookFetcher })
 
   const app = renderer.create(
     <Provider shop={shop}>

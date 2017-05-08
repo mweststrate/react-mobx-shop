@@ -1,103 +1,80 @@
-import { observable, computed, action, reaction, when } from "mobx"
+import { when, reaction } from "mobx"
+import { types, getParent, getSnapshot, applySnapshot } from "mobx-state-tree"
+import { Book } from "./BookStore"
 
-class CartEntry {
-    @observable quantity = 0
-    book
-
-    constructor(book) {
-        this.book = book
-    }
-
-    @computed get price() {
-        return this.quantity * this.book.price
-    }
-
-    @computed get isValidBook() {
-        return this.book.isAvailable
-    }
-
-    @computed get json() {
-        return {
-            book: this.book.id,
-            quantity: this.quantity
+const CartEntry = types.model("CartEntry", {
+        quantity: 0,
+        book: types.reference(Book, "../../../bookStore/books"),
+        get price() {
+            return this.book.price * this.quantity
+        },
+        get isValidBook() {
+            return this.book.isAvailable
         }
-    }
-}
-
-export default class CartStore {
-    shop
-    @observable entries = []
-
-    constructor(shop) {
-        this.shop = shop
-
-        if (typeof window.localStorage !== "undefined") {
-            when(
-                () => !shop.isLoading,
-                () => {
-                    this.readFromLocalStorage();
-                    reaction(
-                        () => this.json,
-                        json => {
-                            window.localStorage.setItem('cart', JSON.stringify(json));
-                        }
-                    )
-                }
-            )
+    }, {
+        increaseQuantity(amount) {
+            this.quantity += amount
         }
-    }
+})
 
-    @computed get subTotal() {
-        return this.entries.reduce((sum, e) => (sum + e.price), 0)
-    }
-
-    @computed get hasDiscount() {
-        return this.subTotal >= 100
-    }
-
-    @computed get discount() {
-        return this.subTotal * (this.hasDiscount ? 0.1 : 0)
-    }
-
-    @computed get total() {
-        return this.subTotal - this.discount
-    }
-
-    @computed get canCheckout() {
-        return this.entries.length > 0 && this.entries.every(entry => entry.quantity > 0 && entry.isValidBook)
-    }
-
-    @computed get json() {
-        return this.entries.filter(entry => entry.isValidBook).map(entry => entry.json)
-    }
-
-    @action addBook(book, quantity = 1, notify = true) {
-        let entry = this.entries.find(entry => entry.book === book)
-        if (!entry) {
-            entry = new CartEntry(book)
-            this.entries.push(entry)
+export const CartStore = types.model("CartStore", {
+        entries: types.array(CartEntry),
+        get shop() {
+            return getParent(this)
+        },
+        get subTotal() {
+            return this.entries.reduce((sum, e) => (sum + e.price), 0)
+        },
+        get hasDiscount() {
+            return this.subTotal >= 100
+        },
+        get discount() {
+            return this.subTotal * (this.hasDiscount ? 0.1 : 0)
+        },
+        get total() {
+            return this.subTotal - this.discount
+        },
+        get canCheckout() {
+            return this.entries.length > 0 && this.entries.every(entry => entry.quantity > 0 && entry.isValidBook)
         }
-        entry.quantity += quantity
-        if (notify)
-            this.shop.alert("Added to cart")
-    }
-
-    @action.bound checkout() {
-        const total = this.total
-        this.clear()
-        this.shop.alert(`Bought books for ${total} € !`)
-    }
-
-    @action clear() {
-        this.entries.clear()
-    }
-
-    @action readFromLocalStorage() {
-        const data = JSON.parse(window.localStorage.getItem('cart') || '[]')
-        data.forEach(json => {
-            const book = this.shop.books.get(json.book)
-            if (book)
-                this.addBook(book, json.quantity, false)
-        });
-    }
-}
+    }, {
+        afterCreate() {
+            if (typeof window.localStorage !== "undefined") {
+                when(
+                    () => !this.shop.isLoading,
+                    () => {
+                        this.readFromLocalStorage();
+                        reaction(
+                            () => getSnapshot(this),
+                            json => {
+                                window.localStorage.setItem('cart', JSON.stringify(json));
+                            }
+                        )
+                    }
+                )
+            }
+        },
+        addBook(book, quantity = 1, notify = true) {
+            let entry = this.entries.find(entry => entry.book === book)
+            if (!entry) {
+                this.entries.push({ book: book })
+                entry = this.entries[this.entries.length - 1]
+            }
+            entry.increaseQuantity(quantity)
+            if (notify)
+                this.shop.alert("Added to cart")
+        },
+        checkout() {
+            const total = this.total
+            this.clear()
+            this.shop.alert(`Bought books for ${total} € !`)
+        },
+        clear() {
+            this.entries.clear()
+        },
+        readFromLocalStorage() {
+            const cartData = window.localStorage.getItem('cart')
+            if (cartData)
+                applySnapshot(this, JSON.parse(cartData))
+        }
+})

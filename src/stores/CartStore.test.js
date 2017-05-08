@@ -1,33 +1,40 @@
 import * as fs from "fs"
 import {when} from "mobx"
-import ShopStore from './ShopStore'
+import {ShopStore} from './ShopStore'
 
-const bookFetcher = () => Promise.resolve(JSON.parse(fs.readFileSync("./public/books.json")))
+const testEnvironment = {
+  fetch: () => Promise.resolve(JSON.parse(fs.readFileSync("./public/books.json"))),
+  alert: (m) => console.log(m)
+}
+
+const testBook = {
+    id: "1",
+    price: 3,
+    author: "test",
+    name: "test"
+  }
 
 it('cart store can add new entries', () => {
-  const shop = new ShopStore(bookFetcher)
-  shop.bookStore.updateBooks([{
-    id: 1,
-    price: 3
-  }])
+  const shop = ShopStore.create({}, testEnvironment)
 
+  shop.bookStore.updateBooks([testBook])
+
+  expect(shop.cart.total).toBe(0)
   shop.cart.addBook(shop.books.get(1))
+  expect(shop.cart.total).toBe(3)
   shop.cart.addBook(shop.books.get(1))
 
-  expect(shop.cart.subTotal).toBe(6)
   expect(shop.cart.total).toBe(6)
+  expect(shop.cart.subTotal).toBe(6)
 
-  shop.cart.entries[0].quantity = 100
+  shop.cart.addBook(shop.books.get(1), 98)
   expect(shop.cart.subTotal).toBe(300)
   expect(shop.cart.total).toBe(270)
 })
 
 it('cart store can clear entries', () => {
-  const shop = new ShopStore(bookFetcher)
-  shop.bookStore.updateBooks([{
-    id: 1,
-    price: 3
-  }])
+  const shop = ShopStore.create({}, testEnvironment)
+  shop.bookStore.updateBooks([testBook])
 
   shop.cart.addBook(shop.books.get(1))
 
@@ -40,11 +47,8 @@ it('cart store can clear entries', () => {
 })
 
 it('cart store can clear entries', () => {
-  const shop = new ShopStore(bookFetcher)
-  shop.bookStore.updateBooks([{
-    id: 1,
-    price: 3
-  }])
+  const shop = ShopStore.create({}, testEnvironment)
+  shop.bookStore.updateBooks([testBook])
 
   shop.cart.addBook(shop.books.get(1))
 

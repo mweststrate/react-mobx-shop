@@ -7,10 +7,14 @@ import createRouter from './utils/router'
 import App from './components/App'
 import './index.css'
 
-import ShopStore from './stores/ShopStore'
+import { ShopStore } from './stores/ShopStore'
 
 const fetcher = url => window.fetch(url).then(response => response.json())
-const shop = new ShopStore(fetcher)
+const shop = ShopStore.create({}, {
+  fetch: fetcher,
+  alert: m => window.alert(m)
+})
+window.shop = shop // for playing around
 
 ReactDOM.render(
   <Provider shop={shop}>

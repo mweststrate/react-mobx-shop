@@ -1,12 +1,12 @@
 import * as fs from "fs"
 import {when} from "mobx"
-import ShopStore from './ShopStore'
+import {ShopStore} from './ShopStore'
 
 const bookFetcher = () => Promise.resolve(JSON.parse(fs.readFileSync("./public/books.json")))
 
 it('as a user I can buy books', (done) => {
   const alertSpy = jasmine.createSpy("alert")
-  const shop = new ShopStore(bookFetcher, alertSpy)
+  const shop = ShopStore.create({}, { fetch: bookFetcher, alert: alertSpy })
 
   shop.view.openBooksPage()
   expect(shop.view.page).toBe("books")
