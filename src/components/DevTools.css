@@ -1,13 +1,16 @@
 .App {
-    width: 50%;
-    float: left;
+    width: 50vw;
+    height: 100vh;
+    position: fixed;
+    overflow: auto;
 }
 .devtools {
-    width: 50%;
-    float: left;
+    width: 50vw;
+    height: 100vh;
+    position: fixed;
+    right: 0px;
     background-color: black;
     color: white;
-    height: 100vh;
 }
 
 .react-tabs__tab-panel {
@@ -16,7 +19,6 @@
 }
 
 .devtools .react-tabs {
-    border-left: 4px solid cyan;
     padding: 20px;
     height: 80vh;
 }

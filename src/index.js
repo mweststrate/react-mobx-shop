@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'mobx-react'
 import { observable, reaction } from 'mobx'
-import { onSnapshot, onAction, onPatch, applySnapshot, applyAction, applyPatch } from 'mobx-state-tree'
+import { onSnapshot, onAction, onPatch, applySnapshot, applyAction, applyPatch, getSnapshot } from 'mobx-state-tree'
 
 import createRouter from './utils/router'
 import App from './components/App'
@@ -28,24 +28,43 @@ const history = {
   patches: observable.shallowArray()
 }
 
-onSnapshot(shop, s => history.snapshots.unshift({
+let recording = true // supress recording history when replaying
+
+onSnapshot(shop, s => recording && history.snapshots.unshift({
   data: s,
-  onClick() {
+  replay() {
+    recording = false
     applySnapshot(shop, this.data)
+    recording = true
   }
 }))
-onPatch(shop, s => history.patches.unshift({
+onPatch(shop, s => recording && history.patches.unshift({
   data: s,
-  onClick() {
+  replay() {
+    recording = false
     applyPatch(shop, this.data)
+    recording = true
   }
 }))
-onAction(shop, s => history.actions.unshift({
+onAction(shop, s => recording && history.actions.unshift({
   data: s,
-  onClick() {
+  replay() {
+    recording = false
     applyAction(shop, this.data)
+    recording = true
   }
 }))
+
+// add initial snapshot
+history.snapshots.push({
+  data: getSnapshot(shop),
+  replay() {
+    // TODO: DRY
+    recording = false
+    applySnapshot(shop, this.data)
+    recording = true
+  }
+})
 
 /**
  * Rendering

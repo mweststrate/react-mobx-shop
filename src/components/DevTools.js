@@ -33,7 +33,7 @@ const DevTools = ({ history }) => (
 )
 
 const HistoryEntry = ({ entry }) => (
-    <div className="history-entry" onClick={() => entry.onClick()}>
+    <div className="history-entry" onClick={() => entry.replay()}>
         { JSON.stringify(entry.data)}
     </div>
 )

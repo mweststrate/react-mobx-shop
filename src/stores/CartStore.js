@@ -14,6 +14,9 @@ const CartEntry = types.model("CartEntry", {
     }, {
         increaseQuantity(amount) {
             this.quantity += amount
+        },
+        setQuantity(amount) {
+            this.quantity = amount
         }
 })
 

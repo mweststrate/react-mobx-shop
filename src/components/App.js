@@ -7,7 +7,6 @@ import Books from "./Books"
 import BookDetails from "./BookDetails"
 import Cart from "./Cart"
 import DevTools from "./DevTools"
-import { isObservable, isComputed } from "mobx"
 
 const App = inject("shop")(observer(({ shop }) => (
   <div>
@@ -18,7 +17,7 @@ const App = inject("shop")(observer(({ shop }) => (
         <AppMenuItem onClick={() => shop.view.openCartPage()}>Your cart</AppMenuItem>
       </AppMenu>
       {shop.isLoading
-        ? <h1>Loading...{shop.bookStore.isLoading === false ? "false": "true"}</h1>
+        ? <h1>Loading...</h1>
         : renderPage(shop.view)
       }
     </div>
