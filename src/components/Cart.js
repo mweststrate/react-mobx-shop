@@ -32,7 +32,7 @@ const CartEntry = inject("shop")(observer(({shop, entry}) => (
     {!entry.book.isAvailable && <p><b>Not available anymore</b></p>}
     <div className="Page-cart-item-details">
       <p>Amount:
-        <input value={entry.quantity} onChange={updateEntryQuantity.bind(entry)} />
+        <input type="number" value={entry.quantity}onChange={updateEntryQuantity.bind(entry)} />
         total: <b>{entry.price} €</b>
       </p>
     </div>
@@ -46,7 +46,7 @@ function onEntryClick(shop, e) {
 }
 
 function updateEntryQuantity(e) {
-  this.quantity = parseInt(e.target.value, 10)
+  this.updateQuantity(e.target.value)
 }
 
 export default Cart

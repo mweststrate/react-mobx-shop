@@ -14,6 +14,11 @@ const CartEntry = types.model("CartEntry", {
     }, {
         increaseQuantity(amount) {
             this.quantity += amount
+        },
+        updateQuantity(newAmount) {
+            const amount  = parseInt(newAmount, 10)
+            // eslint-disable-next-line
+            this.quantity = amount !== amount ? 0 : amount
         }
 })
 
