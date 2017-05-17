@@ -38,7 +38,7 @@ export const CartStore = types.model("CartStore", {
             return this.entries.length > 0 && this.entries.every(entry => entry.quantity > 0 && entry.isValidBook)
         }
     }, {
-        afterCreate() {
+        afterAttach() {
             if (typeof window.localStorage !== "undefined") {
                 when(
                     () => !this.shop.isLoading,

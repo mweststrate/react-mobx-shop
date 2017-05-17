@@ -1,7 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'mobx-react'
-import { reaction } from 'mobx'
+import { observable, reaction } from 'mobx'
+import { onSnapshot, onAction, onPatch, applySnapshot, applyAction, applyPatch } from 'mobx-state-tree'
 
 import createRouter from './utils/router'
 import App from './components/App'
@@ -12,16 +13,53 @@ import { ShopStore } from './stores/ShopStore'
 const fetcher = url => window.fetch(url).then(response => response.json())
 const shop = ShopStore.create({}, {
   fetch: fetcher,
-  alert: m => window.alert(m)
+  alert: m => console.log(m) // Noop for demo: window.alert(m)
 })
+
 window.shop = shop // for playing around
 
+/**
+ * "DevToos"
+ */
+
+const history = {
+  snapshots: observable.shallowArray(),
+  actions: observable.shallowArray(),
+  patches: observable.shallowArray()
+}
+
+onSnapshot(shop, s => history.snapshots.unshift({
+  data: s,
+  onClick() {
+    applySnapshot(shop, this.data)
+  }
+}))
+onPatch(shop, s => history.patches.unshift({
+  data: s,
+  onClick() {
+    applyPatch(shop, this.data)
+  }
+}))
+onAction(shop, s => history.actions.unshift({
+  data: s,
+  onClick() {
+    applyAction(shop, this.data)
+  }
+}))
+
+/**
+ * Rendering
+ */
 ReactDOM.render(
-  <Provider shop={shop}>
+  <Provider shop={shop} history={history}>
     <App />
   </Provider>,
   document.getElementById('root')
 )
+
+/**
+ * Routing
+ */
 
 reaction(
   () => shop.view.currentUrl,

@@ -20,13 +20,14 @@ export const BookStore = types.model("BookStore", {
     }, {
         loadBooks() {
             this.shop.fetch("/books.json")
-                .then(json => {
-                    this.updateBooks(json)
-                    this.markLoading(false)
-                })
+                .then(this.receiveJson)
                 .catch(err => {
                     console.error("Failed to load books ", err)
                 })
+        },
+        receiveJson(json) {
+            this.updateBooks(json)
+            this.markLoading(false)
         },
         markLoading(loading) {
             this.isLoading = loading

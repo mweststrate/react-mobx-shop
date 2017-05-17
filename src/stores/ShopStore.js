@@ -4,9 +4,13 @@ import { CartStore } from './CartStore'
 import { ViewStore } from './ViewStore'
 
 export const ShopStore = types.model("ShopStore", {
-    bookStore: types.withDefault(BookStore, {}),
-    cart: types.withDefault(CartStore, {}),
-    view: types.withDefault(ViewStore, {}),
+    bookStore: types.optional(BookStore, {
+      books: {}
+    }),
+    cart: types.optional(CartStore, {
+      entries: []
+    }),
+    view: types.optional(ViewStore, {}),
     get fetch() {
       return getEnv(this).fetch
     },

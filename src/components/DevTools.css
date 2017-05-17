@@ -1,0 +1,30 @@
+.App {
+    width: 50%;
+    float: left;
+}
+.devtools {
+    width: 50%;
+    float: left;
+    background-color: black;
+    color: white;
+    height: 100vh;
+}
+
+.react-tabs__tab-panel {
+    height: 80vh;
+    overflow: auto;
+}
+
+.devtools .react-tabs {
+    border-left: 4px solid cyan;
+    padding: 20px;
+    height: 80vh;
+}
+
+.history-entry {
+    padding: 4px;
+    border-bottom: 1px solid #ccc;
+    font-family: 'courier new';
+    font-size: 11px;
+    cursor: pointer;
+}

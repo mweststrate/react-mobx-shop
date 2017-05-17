@@ -15,7 +15,7 @@ const Cart = inject("shop")(observer(({ shop: { cart }}) => (
     <p><b>Total: {cart.total} €</b></p>
     <button
       disabled={!cart.canCheckout}
-      onClick={cart.checkout}
+      onClick={() => cart.checkout()}
     >
       Submit order
     </button>
