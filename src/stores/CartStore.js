@@ -14,11 +14,16 @@ const CartEntry = types.model("CartEntry", {
     }, {
         increaseQuantity(amount) {
             this.quantity += amount
+        },
+        updateQuantity(newAmount) {
+            const amount  = parseInt(newAmount, 10)
+            // eslint-disable-next-line
+            this.quantity = amount !== amount ? 0 : amount
         }
 })
 
 export const CartStore = types.model("CartStore", {
-        entries: types.array(CartEntry),
+        entries: types.optional(types.array(CartEntry), []),
         get shop() {
             return getParent(this)
         },

@@ -10,7 +10,7 @@ export const Book = types.model("Book", {
 
 export const BookStore = types.model("BookStore", {
         isLoading: true,
-        books: types.map(Book),
+        books: types.optional(types.map(Book), {}),
         get shop() {
             return getParent(this)
         },
