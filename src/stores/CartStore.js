@@ -18,7 +18,7 @@ const CartEntry = types.model("CartEntry", {
 })
 
 export const CartStore = types.model("CartStore", {
-        entries: types.array(CartEntry),
+        entries: types.optional(types.array(CartEntry), []),
         get shop() {
             return getParent(this)
         },
