@@ -33,9 +33,9 @@ const DevTools = ({ history }) => (
 )
 
 const HistoryEntry = ({ entry }) => (
-    <div className="history-entry" onClick={() => entry.replay()}>
-        { JSON.stringify(entry.data)}
-    </div>
+    <pre className="history-entry" onClick={() => entry.replay()}>
+        { JSON.stringify(entry.data, null, 2)}
+    </pre>
 )
 
 export default inject("history")(observer(DevTools))
