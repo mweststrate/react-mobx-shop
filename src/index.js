@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'mobx-react'
 import { observable, reaction } from 'mobx'
-import { onSnapshot, onAction, onPatch, applySnapshot, applyAction, applyPatch, getSnapshot } from 'mobx-state-tree'
+import { onSnapshot, onAction, onPatch, applySnapshot, applyAction, applyPatch, getSnapshot, connectReduxDevtools } from 'mobx-state-tree'
 
 import createRouter from './utils/router'
 import App from './components/App'
@@ -17,6 +17,7 @@ const shop = ShopStore.create({}, {
 })
 
 window.shop = shop // for playing around
+connectReduxDevtools(require("remotedev"), shop)
 
 /**
  * "DevToos"
